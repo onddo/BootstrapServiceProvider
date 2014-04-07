@@ -1,0 +1,25 @@
+{
+    "name": "onddo/bootstrap-service-provider",
+    "description": "A Twitter Bootstrap provider for Silex.",
+    "keywords": ["silex", "bootstrap"],
+    "authors": [
+        {
+            "name": "Raul Rodriguez",
+            "email": "raul@onddo.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "~1.0",
+        "braincrafted/bootstrap-bundle": "~2.0"
+    },
+    "require-dev": {
+        "symfony/twig-bridge": "~2.3",
+        "symfony/form": "~2.3"
+    },
+    "suggest": {
+        "twbs/bootstrap": "Provides Twitter Bootstrap assets"
+    },
+    "autoload": {
+        "psr-0": { "Onddo\\": "src/" }
+    }
+}
