@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "symfony/twig-bridge": "~2.3",
-        "symfony/form": "~2.3"
+        "symfony/form": "~2.3",
+        "phpunit/phpunit": "~3.7"
     },
     "suggest": {
         "twbs/bootstrap": "Provides Twitter Bootstrap assets"
