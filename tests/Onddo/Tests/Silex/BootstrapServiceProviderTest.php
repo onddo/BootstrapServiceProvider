@@ -8,6 +8,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\SessionServiceProvider;
+use SilexAssetic\AsseticServiceProvider;
 
 class BootstrapServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,6 +20,12 @@ class BootstrapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->app->register(new TwigServiceProvider());
         $this->app->register(new FormServiceProvider());
         $this->app->register(new SessionServiceProvider());
+        $this->app->register(new AsseticServiceProvider(), array(
+            'assetic.path_to_web' => sys_get_temp_dir(),
+            'assetic.filters' => $this->app->protect(function($fm) {
+                $fm->set('less', new \Assetic\Filter\LessFilter());
+            })
+        ));
         $this->app->register(new BootstrapServiceProvider());
     }
 
@@ -46,5 +53,39 @@ class BootstrapServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testFlashMessage()
     {
         $this->assertInstanceOf('Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage', $this->app['bootstrap.flash']);
+    }
+
+    public function testTwigAutomaticConfiguration()
+    {
+        $this->app['bootstrap.auto_configure'] = array('twig' => true);
+        $this->app->boot();
+        $this->assertContains('@bootstrap/Form/bootstrap.html.twig', $this->app['twig.form.templates'], 'Bootstrap form template should be registered');
+    }
+
+    public function testTwigManualConfiguration()
+    {
+        $this->app['bootstrap.auto_configure'] = array('twig' => false);
+        $this->app->boot();
+        $this->assertNotContains('@bootstrap/Form/bootstrap.html.twig', $this->app['twig.form.templates'], 'Bootstrap form template should not be registered');
+    }
+
+    public function testAsseticAutomaticConfiguration()
+    {
+        $this->app['bootstrap.auto_configure'] = array('assetic' => true);
+        $this->app->boot();
+        $am = $this->app['assetic.asset_manager'];
+        $this->assertTrue($am->has('bootstrap_css'), 'Bootstrap CSS should be configured on Assetic Manager');
+        $this->assertTrue($am->has('bootstrap_js'), 'Bootstrap JS should be configured on Assetic Manager');
+        $this->assertTrue($am->has('jquery'), 'JQuery should be configured on Assetic Manager');
+    }
+
+    public function testAsseticManualConfiguration()
+    {
+        $this->app['bootstrap.auto_configure'] = array('assetic' => false);
+        $this->app->boot();
+        $am = $this->app['assetic.asset_manager'];
+        $this->assertFalse($am->has('bootstrap_css'), 'Bootstrap CSS should not be configured on Assetic Manager');
+        $this->assertFalse($am->has('bootstrap_js'), 'Bootstrap JS should not be configured on Assetic Manager');
+        $this->assertFalse($am->has('jquery'), 'JQuery should not be configured on Assetic Manager');
     }
 }

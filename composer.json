@@ -15,10 +15,13 @@
     "require-dev": {
         "symfony/twig-bridge": "~2.3",
         "symfony/form": "~2.3",
+        "mheap/Silex-Assetic": "~1.0",
         "phpunit/phpunit": "~3.7"
     },
     "suggest": {
-        "twbs/bootstrap": "Provides Twitter Bootstrap assets"
+        "twbs/bootstrap": "Provides Twitter Bootstrap assets",
+        "yiisoft/jquery": "Provides JQuery library needed by Bootstrap",
+        "mheap/Silex-Assetic": "Recommended for asset management"
     },
     "autoload": {
         "psr-0": { "Onddo\\": "src/" }
